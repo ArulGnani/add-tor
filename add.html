@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- react -->
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+    <!-- react DOM -->
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+    <!-- babel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.24.0/babel.js"></script>
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    
+
+</head>
+<body>
+    <div id="app"></div>
+
+    
+    <script type="text/babel">
+        class Add extends React.Component{
+            constructor( props ){
+                super( props )
+                this.state = {
+                    num1 : 1,
+                    num2 : 1,
+                    score : 0,
+                    input : "",
+                    incorrect : false
+                }
+            }
+
+            render(){
+                if ( this.state.score > 10 ){
+                    return this.renderWin()
+                }else{
+                    return this.renderPlay()
+                }
+            }
+
+            renderPlay(){
+                return ( 
+                    <div className="container mt-5 col-lg-6 border border-secondary p-3">
+                        <h1 className={ this.state.incorrect ? "text-danger" : "" }>
+                            { this.state.num1 } + { this.state.num2 }
+                        </h1>
+                        <input placeholder="enter the result" type="text"
+                        value={ this.state.input } onChange={ this.updateNum }
+                        onKeyPress={ this.submit } className="my-3"/>
+                        <div className="my-2">
+                            <h3 className="text-primary">score :{ this.state.score }</h3>
+                        </div>
+                    </div>
+                )
+            }
+
+            renderWin(){
+                return (
+                    <div>
+                        <h1>congratulation you won</h1>
+                    </div>
+                )
+            }
+
+            submit = ( event ) => {
+                if ( event.key === 'Enter' ){
+                    const ans = parseInt( this.state.input )
+                    const op = ["+","-","/","*"]
+                    if ((this.state.num1 + this.state.num2) === ans ){
+                            this.setState(( state ) => ({
+                                score : this.state.score + 1,
+                                num1 : Math.floor(Math.random() * 100),
+                                num2 : Math.floor(Math.random() * 100),
+                                incorrect : false
+                            }))
+                    }
+                    else {
+                        this.setState({
+                            input : "",
+                            incorrect : true
+                        })
+                    }
+                }
+            }
+
+            updateNum = ( event ) => {
+                this.setState({
+                    input : event.target.value
+                })
+                console.log(this.state)
+            }
+        }
+
+        class App extends React.Component{
+            render(){
+                return (
+                    <div className="container text-center">
+                        <h1 className="mt-3">a-tor</h1>
+                        <Add />
+                    </div>                  
+                )
+            }
+        
+        }
+
+        ReactDOM.render(<App />,document.querySelector("#app"))
+    </script>
+</body>
+</html>
